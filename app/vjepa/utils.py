@@ -147,8 +147,8 @@ def init_video_model(
     def count_parameters(model):
         return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
-    logger.info(f'Encoder number of parameters: {count_parameters(encoder)}')
-    logger.info(f'Predictor number of parameters: {count_parameters(predictor)}')
+    logger.info(f'Encoder number of parameters: {count_parameters(encoder):,}')
+    logger.info(f'Predictor number of parameters: {count_parameters(predictor):,}')
 
     return encoder, predictor
 

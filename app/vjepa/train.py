@@ -20,7 +20,7 @@ except Exception:
 import copy
 import time
 import numpy as np
-
+import wandb
 import torch
 import torch.multiprocessing as mp
 import torch.nn.functional as F
@@ -520,7 +520,7 @@ def main(args, resume_preempt=False):
                     grad_stats_pred.global_norm,
                     gpu_etime_ms,
                     iter_elapsed_time_ms)
-                if (itr % log_freq == 0) or np.isnan(loss) or np.isinf(loss):
+                if (itr % args['logging']['log_freq'] == 0) or np.isnan(loss) or np.isinf(loss):
                     logger.info(
                         '[%d, %5d] loss: %.3f | p%.3f r%.3f | '
                         'input_var: %.3f %.3f | '
@@ -541,6 +541,32 @@ def main(args, resume_preempt=False):
                            torch.cuda.max_memory_allocated() / 1024.0**2,
                            gpu_time_meter.avg,
                            wall_time_meter.avg))
+                    
+                    if args['log_wandb']:
+                        wandb.log({
+                            'epoch':epoch+1,
+                            'loss':loss,
+                            'loss_jepa':loss_jepa,
+                            'loss_reg':loss_reg,
+                            'lr':_new_lr,
+                            'wd':_new_wd,
+                            'opt_mom1_avg':optim_stats.get('exp_avg').avg,
+                            'opt_mom1_min':optim_stats.get('exp_avg').min,
+                            'opt_mom1_max':optim_stats.get('exp_avg').max,
+                            'opt_mom2_avg':optim_stats.get('exp_avg_sq').avg,
+                            'opt_mom2_min':optim_stats.get('exp_avg_sq').min,
+                            'opt_mom2_max':optim_stats.get('exp_avg_sq').max,
+                            'enc_grd_fl':grad_stats.first_layer,
+                            'enc_grd_ll':grad_stats.last_layer,
+                            'enc_grd_min':grad_stats.min,
+                            'enc_grd_max':grad_stats.max,
+                            'enc_grd_all':grad_stats.global_norm,
+                            'prd_grd_fl:':grad_stats_pred.first_layer,
+                            'prd_grd_ll': grad_stats_pred.last_layer,
+                            'prd_grd_min':grad_stats_pred.min,
+                            'prd_grd_max':grad_stats_pred.max,
+                            'prd_grd_all':grad_stats_pred.global_norm,
+                            })
 
                     if optim_stats is not None:
                         logger.info(
@@ -578,7 +604,7 @@ def main(args, resume_preempt=False):
         # -- Save Checkpoint
         logger.info('avg. loss %.3f' % loss_meter.avg)
         # -- Save Last
-        if epoch % checkpoint_freq == 0 or epoch == (num_epochs - 1):
+        if epoch % args['meta']['checkpoint_freq'] == 0 or epoch == (num_epochs - 1):
             save_checkpoint(epoch + 1, latest_path)
             if save_every_freq > 0 and epoch % save_every_freq == 0:
                 save_every_file = f'{tag}-e{epoch}.pth.tar'

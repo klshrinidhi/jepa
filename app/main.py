@@ -6,11 +6,12 @@
 #
 
 import argparse
-
+import pathlib
 import multiprocessing as mp
 
 import pprint
 import yaml
+import wandb
 
 from app.scaffold import main as app_main
 from src.utils.distributed import init_distributed
@@ -23,6 +24,7 @@ parser.add_argument(
 parser.add_argument(
     '--devices', type=str, nargs='+', default=['cuda:0'],
     help='which devices to use on local machine')
+parser.add_argument('--log_wandb',action='store_true',default=False)
 
 
 def process_main(rank, fname, world_size, devices):
@@ -48,9 +50,16 @@ def process_main(rank, fname, world_size, devices):
     # Log config
     if rank == 0:
         pprint.PrettyPrinter(indent=4).pprint(params)
+        pathlib.Path(params['logging']['folder']).mkdir(exist_ok=True)
         dump = os.path.join(params['logging']['folder'], 'params-pretrain.yaml')
         with open(dump, 'w') as f:
             yaml.dump(params, f)
+        params['log_wandb'] = args.log_wandb
+        if args.log_wandb:
+            wandb.init(project='ClinicalMAE',
+                       entity='cerc-pac',
+                       config=params,
+                       name=params['logging']['folder'].split('/')[-1])
 
     # Init distributed (access to comm between GPUS on same machine)
     world_size, rank = init_distributed(rank_and_world_size=(rank, world_size))
@@ -63,9 +72,12 @@ def process_main(rank, fname, world_size, devices):
 if __name__ == '__main__':
     args = parser.parse_args()
     num_gpus = len(args.devices)
-    mp.set_start_method('spawn')
-    for rank in range(num_gpus):
-        mp.Process(
-            target=process_main,
-            args=(rank, args.fname, num_gpus, args.devices)
-        ).start()
+    if num_gpus == 1:
+        process_main(0,args.fname,num_gpus,args.devices)
+    else:
+        mp.set_start_method('spawn')
+        for rank in range(num_gpus):
+            mp.Process(
+                target=process_main,
+                args=(rank, args.fname, num_gpus, args.devices)
+            ).start()

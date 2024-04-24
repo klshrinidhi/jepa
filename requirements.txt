@@ -1,3 +1,4 @@
+importlib-metadata
 torch>=2
 torchvision
 pyyaml
