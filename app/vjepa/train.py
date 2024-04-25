@@ -152,6 +152,8 @@ def main(args, resume_preempt=False):
     eps = cfgs_opt.get('eps', 1.e-8)
 
     # -- LOGGING
+    rank = args.get('rank')
+    log_wandb = args.get('log_wandb')
     cfgs_logging = args.get('logging')
     folder = cfgs_logging.get('folder')
     tag = cfgs_logging.get('write_tag')
@@ -542,7 +544,7 @@ def main(args, resume_preempt=False):
                            gpu_time_meter.avg,
                            wall_time_meter.avg))
                     
-                    if args['log_wandb']:
+                    if rank == 0 and log_wandb:
                         wandb.log({
                             'epoch':epoch+1,
                             'loss':loss,
