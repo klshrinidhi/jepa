@@ -28,7 +28,7 @@ data_aug:
   - 1.0
   reprob: 0.0
 logging:
-  folder: /data/output/jepa_b16
+  folder: /data/output/jepa/jepa_b16
   write_tag: jepa
   log_freq: 1
 loss:

@@ -15,13 +15,12 @@ from logging import getLogger
 logger = getLogger()
 
 
-def init_distributed(port=37123, rank_and_world_size=(None, None)):
+def init_distributed(master_addr=None, master_port=37123, rank=None, world_size=None):
 
     if dist.is_available() and dist.is_initialized():
         return dist.get_world_size(), dist.get_rank()
-
-    rank, world_size = rank_and_world_size
-    os.environ['MASTER_ADDR'] = 'localhost'
+    
+    os.environ['MASTER_ADDR'] = 'localhost' if master_addr is None else master_addr
 
     if (rank is None) or (world_size is None):
         try:
@@ -34,12 +33,13 @@ def init_distributed(port=37123, rank_and_world_size=(None, None)):
             return world_size, rank
 
     try:
-        os.environ['MASTER_PORT'] = str(port)
+        os.environ['MASTER_PORT'] = str(master_port)
         torch.distributed.init_process_group(
             backend='nccl',
             world_size=world_size,
             rank=rank
         )
+        torch.distributed.barrier()
     except Exception as e:
         world_size, rank = 1, 0
         logger.info(f'Rank: {rank}. Distributed training not available {e}')

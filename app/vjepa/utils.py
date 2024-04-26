@@ -141,8 +141,8 @@ def init_video_model(
 
     encoder.to(device)
     predictor.to(device)
-    logger.info(encoder)
-    logger.info(predictor)
+    # logger.info(encoder)
+    # logger.info(predictor)
 
     def count_parameters(model):
         return sum(p.numel() for p in model.parameters() if p.requires_grad)
