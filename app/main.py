@@ -50,6 +50,7 @@ def process_main(local_rank, fname, rank, world_size, master_addr, master_port, 
         logger.info('loaded params...')
 
     # Log config
+    params['world_size'] = world_size
     params['rank'] = rank
     params['log_wandb'] = log_wandb
     if rank == 0:

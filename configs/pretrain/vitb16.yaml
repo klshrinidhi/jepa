@@ -1,6 +1,4 @@
 app: vjepa
-nodes: 16
-tasks_per_node: 8
 data:
   dataset_type: VideoDataset
   datasets:
@@ -10,7 +8,7 @@ data:
   num_clips: 1
   num_frames: 16
   tubelet_size: 2
-  sampling_rate: 4
+  sampling_rate: 2
   crop_size: 224
   patch_size: 16
   pin_mem: true
