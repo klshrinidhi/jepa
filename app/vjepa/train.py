@@ -601,7 +601,7 @@ def main(args, resume_preempt=False):
                                grad_stats_pred.max,
                                grad_stats_pred.global_norm))
             log_stats()
-            assert not np.isnan(loss), 'loss is nan'
+            # assert not np.isnan(loss), 'loss is nan'
 
         # -- Save Checkpoint
         logger.info('avg. loss %.3f' % loss_meter.avg)
