@@ -4,6 +4,9 @@ set -o errexit
 set -o nounset
 set -o xtrace
 
+cd ~/jepa
+git pull origin main
+
 #################################################################################
 ## Single Node - Single or Multi GPU
 
