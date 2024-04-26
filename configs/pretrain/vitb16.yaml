@@ -4,7 +4,7 @@ data:
   datasets:
     - /data/jepa_data.csv
   decode_one_clip: true
-  batch_size: 40
+  batch_size: 36
   num_clips: 1
   num_frames: 16
   tubelet_size: 2
