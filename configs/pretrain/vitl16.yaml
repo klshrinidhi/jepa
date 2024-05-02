@@ -26,7 +26,7 @@ data_aug:
   - 1.0
   reprob: 0.0
 logging:
-  folder: /data/output/jepa/jepa_l16_lr10
+  folder: /data/output/jepa/jepa_l16_pt
   write_tag: jepa
   log_freq: 1
 loss:
@@ -59,8 +59,8 @@ mask:
     max_keep: null
 meta:
   checkpoint_freq: 1
-  load_checkpoint: false
-  read_checkpoint: null
+  load_checkpoint: true
+  read_checkpoint: vitl16.pth.tar
   seed: 234
   eval_freq: 100
   use_sdpa: true
@@ -79,9 +79,9 @@ optimization:
   final_weight_decay: 0.4
   epochs: 75 # 300
   warmup: 10 # 40
-  start_lr: 2.0e-5 # 0.0002
-  lr: 6.25e-5 # 0.000625
-  final_lr: 1.0e-7 # 1.0e-06
+  start_lr: 2.0e-4 # 2.0e-5
+  lr: 6.25e-4 # 6.25e-5
+  final_lr: 1.0e-6 # 1.0e-07
   ema:
   - 0.998
   - 1.0
