@@ -77,7 +77,7 @@ optimization:
   clip_grad: 10.0
   weight_decay: 0.04
   final_weight_decay: 0.4
-  epochs: 75 # 300
+  epochs: 375 # 75 # 300
   warmup: 10 # 40
   start_lr: 2.0e-4 # 2.0e-5
   lr: 6.25e-4 # 6.25e-5
