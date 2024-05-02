@@ -78,7 +78,7 @@ optimization:
   weight_decay: 0.04
   final_weight_decay: 0.4
   epochs: 375 # 75 # 300
-  warmup: 10 # 40
+  warmup: 40
   start_lr: 2.0e-4 # 2.0e-5
   lr: 6.25e-4 # 6.25e-5
   final_lr: 1.0e-6 # 1.0e-07
