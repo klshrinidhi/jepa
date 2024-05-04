@@ -26,7 +26,7 @@ data_aug:
   - 1.0
   reprob: 0.0
 logging:
-  folder: /data/output/jepa/jepa_l16_pt_lr100_w10e40
+  folder: /data/output/jepa/jepa_l16_noreg_pt_lr100_w10e40
   write_tag: jepa
   log_freq: 1
 loss:

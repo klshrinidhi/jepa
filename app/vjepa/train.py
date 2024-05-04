@@ -458,6 +458,7 @@ def main(args, resume_preempt=False):
                     loss_jepa = loss_fn(z, h)  # jepa prediction loss
                     pstd_z = reg_fn(z)  # predictor variance across patches
                     loss_reg += torch.mean(F.relu(1.-pstd_z))
+                    loss_reg = 0 if loss_reg.isnan() else loss_reg
                 loss = loss_jepa + reg_coeff * loss_reg
 
                 # Step 2. Backward & step
