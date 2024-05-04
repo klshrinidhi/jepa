@@ -26,7 +26,7 @@ data_aug:
   - 1.0
   reprob: 0.0
 logging:
-  folder: /data/output/jepa/jepa_l16_lr100_w10e40
+  folder: /data/output/jepa/jepa_l16_pt_lr100_w10e40
   write_tag: jepa
   log_freq: 1
 loss:
@@ -60,8 +60,8 @@ mask:
 meta:
   checkpoint_freq: 1
   save_every_freq: 1
-  load_checkpoint: false # true
-  read_checkpoint: null # vitl16.pth.tar
+  load_checkpoint: true
+  read_checkpoint: vitl16.pth.tar
   seed: 234
   eval_freq: 100
   use_sdpa: true
